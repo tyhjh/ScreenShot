@@ -49,7 +49,15 @@ public class MyService extends Service {
         params3 = new WindowManager.LayoutParams();
 
         // 设置Window Type
-        params3.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            params3.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            params3.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        }
+
+
         // 设置悬浮框不可触摸
         params3.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_INSET_DECOR;
