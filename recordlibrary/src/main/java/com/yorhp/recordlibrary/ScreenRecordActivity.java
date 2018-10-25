@@ -1,17 +1,17 @@
 package com.yorhp.recordlibrary;
 
-import android.content.Context;
 import android.content.Intent;
-import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 public class ScreenRecordActivity extends AppCompatActivity {
     public static final int REQUEST_MEDIA_PROJECTION = 18;
+
+    public static boolean isScrennShot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +20,18 @@ public class ScreenRecordActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
-            ScreenRecordUtil.permissionResult(resultCode,data);
+            if (isScrennShot) {
+                ScreenShotUtil.permissionResult(resultCode, data);
+            } else {
+                ScreenRecordUtil.permissionResult(resultCode, data);
+            }
+
+
             finish();
         }
     }
@@ -35,15 +42,18 @@ public class ScreenRecordActivity extends AppCompatActivity {
             //5.0 之后才允许使用屏幕截图
             return;
         }
-        startActivityForResult(
-                ScreenRecordUtil.mMediaProjectionManager.createScreenCaptureIntent(),
-                REQUEST_MEDIA_PROJECTION);
+        if (isScrennShot) {
+            startActivityForResult(ScreenShotUtil.mMediaProjectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
+        } else {
+            startActivityForResult(ScreenRecordUtil.mMediaProjectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
+        }
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ScreenRecordUtil.isInit=true;
+        ScreenShotUtil.isInit = true;
         Log.e("ScreenRecordActivity：", "onDestroy");
     }
 }

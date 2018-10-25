@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.yorhp.recordlibrary.ScreenRecordUtil;
+import com.yorhp.recordlibrary.ScreenShotUtil;
 
 
 public class MyService extends Service {
@@ -102,7 +102,7 @@ public class MyService extends Service {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
-                Bitmap bitmap = ScreenRecordUtil.getInstance().getScreenShot();
+                Bitmap bitmap = ScreenShotUtil.getInstance().getScreenShot();
                 btnView3.setImageBitmap(bitmap);
             }
         });
