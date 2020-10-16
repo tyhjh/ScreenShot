@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.ImageView;
 import com.yorhp.recordlibrary.ScreenRecordUtil;
 import com.yorhp.recordlibrary.ScreenUtil;
 import com.yorhp.screenrecord.app.MyApplication;
-
-import java.io.File;
 
 import permison.PermissonUtil;
 
@@ -35,15 +32,27 @@ public class MainActivity extends AppCompatActivity {
         ScreenUtil.getScreenSize(this);
 
 
-        ScreenRecordUtil.getInstance().init(ScreenUtil.SCREEN_WIDTH, ScreenUtil.SCREEN_HEIGHT, screenRecordBitrate);
+        /**
+         * 初始化成功
+         */
+        /*ScreenShotUtil.getInstance().screenShot(this, new OnScreenShotListener() {
+            @Override
+            public void screenShot() {
+                iv_pre.setImageBitmap(ScreenShotUtil.getInstance().getScreenShot());
+            }
+        });*/
+
+
+        ScreenRecordUtil.init(ScreenUtil.SCREEN_WIDTH, ScreenUtil.SCREEN_HEIGHT, screenRecordBitrate);
         String savePath = MyApplication.baseDir + System.currentTimeMillis() + ".mp4";
         ScreenRecordUtil.getInstance().start(MainActivity.this, savePath);
+
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(60 * 1000);
+                    Thread.sleep(10 * 1000);
                     ScreenRecordUtil.getInstance().destroy();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -52,15 +61,11 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
 
+
+
         //申请悬浮窗权限
         //FloatWindowManager.getInstance().applyOrShowFloatWindow(MainActivity.this);
-        /*ScreenShotUtil.getInstance().screenShot(this, new OnScreenShotListener() {
-            @Override
-            public void screenShot() {
-                iv_pre.setImageBitmap(ScreenShotUtil.getInstance().getScreenShot());
 
-            }
-        });*/
 
         iv_pre.setOnClickListener(new View.OnClickListener() {
             @Override

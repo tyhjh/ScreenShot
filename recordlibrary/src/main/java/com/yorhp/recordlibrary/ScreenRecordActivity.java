@@ -1,6 +1,8 @@
 package com.yorhp.recordlibrary;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +18,13 @@ public class ScreenRecordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestCapturePermission();
+        MediaProjectionManager projectionManager = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            projectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+            startActivityForResult(projectionManager.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION);
+        }else {
+            requestCapturePermission();
+        }
     }
 
 
@@ -30,8 +38,6 @@ public class ScreenRecordActivity extends AppCompatActivity {
             } else {
                 ScreenRecordUtil.permissionResult(resultCode, data);
             }
-
-
             finish();
         }
     }

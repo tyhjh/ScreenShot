@@ -35,6 +35,7 @@ public class ScreenRecordUtil {
         mRecordWidth=width;
         mRecordheight=height;
         mScreenRecordBitrate=screenRecordBitrate;
+
     }
 
 
