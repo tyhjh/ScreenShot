@@ -9,9 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.yorhp.recordlibrary.ScreenRecordUtil;
+import com.yorhp.recordlibrary.OnScreenShotListener;
+import com.yorhp.recordlibrary.ScreenShotUtil;
 import com.yorhp.recordlibrary.ScreenUtil;
-import com.yorhp.screenrecord.app.MyApplication;
 
 import permison.PermissonUtil;
 
@@ -35,15 +35,15 @@ public class MainActivity extends AppCompatActivity {
         /**
          * 初始化成功
          */
-        /*ScreenShotUtil.getInstance().screenShot(this, new OnScreenShotListener() {
+        ScreenShotUtil.getInstance().screenShot(this, new OnScreenShotListener() {
             @Override
             public void screenShot() {
                 iv_pre.setImageBitmap(ScreenShotUtil.getInstance().getScreenShot());
             }
-        });*/
+        });
 
 
-        ScreenRecordUtil.init(ScreenUtil.SCREEN_WIDTH, ScreenUtil.SCREEN_HEIGHT, screenRecordBitrate);
+        /*ScreenRecordUtil.init(ScreenUtil.SCREEN_WIDTH, ScreenUtil.SCREEN_HEIGHT, screenRecordBitrate);
         String savePath = MyApplication.baseDir + System.currentTimeMillis() + ".mp4";
         ScreenRecordUtil.getInstance().start(MainActivity.this, savePath);
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }).start();*/
 
 
 
