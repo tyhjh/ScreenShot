@@ -1,13 +1,14 @@
 package com.yorhp.screenrecord;
 
 import android.Manifest;
-import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.yorhp.recordlibrary.OnScreenShotListener;
 import com.yorhp.recordlibrary.ScreenShotUtil;
@@ -31,16 +32,6 @@ public class MainActivity extends AppCompatActivity {
         PermissonUtil.checkPermission(this, null, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         ScreenUtil.getScreenSize(this);
 
-
-        /**
-         * 初始化成功
-         */
-        ScreenShotUtil.getInstance().screenShot(this, new OnScreenShotListener() {
-            @Override
-            public void screenShot() {
-                iv_pre.setImageBitmap(ScreenShotUtil.getInstance().getScreenShot());
-            }
-        });
 
 
         /*ScreenRecordUtil.init(ScreenUtil.SCREEN_WIDTH, ScreenUtil.SCREEN_HEIGHT, screenRecordBitrate);
@@ -70,8 +61,23 @@ public class MainActivity extends AppCompatActivity {
         iv_pre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startService(new Intent(MainActivity.this, MyService.class));
-                moveTaskToBack(true);
+               /* startService(new Intent(MainActivity.this, MyService.class));
+                moveTaskToBack(true);*/
+                /**
+                 * 初始化成功
+                 */
+                ScreenShotUtil.getInstance().screenShot(MainActivity.this, new OnScreenShotListener() {
+                    @Override
+                    public void screenShot(boolean success) {
+                        if(success){
+                            Bitmap bitmap=ScreenShotUtil.getInstance().getScreenShot();
+                            iv_pre.setImageBitmap(bitmap);
+                        }else {
+                            Toast.makeText(MainActivity.this,"初始化失败",Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
             }
         });
 

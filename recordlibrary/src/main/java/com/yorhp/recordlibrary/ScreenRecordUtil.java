@@ -19,11 +19,11 @@ public class ScreenRecordUtil {
 
     static ScreenRecorder mRecorder;
 
-    static int mScreenDensity;
-    static int mRecordWidth;
-    static int mRecordheight;
-    static int mScreenRecordBitrate = 30;
-    static String savePath;
+    private int mScreenDensity;
+    private int mRecordWidth;
+    private int mRecordheight;
+    private int mScreenRecordBitrate = 30;
+    private String savePath;
 
     static MediaProjectionManager mMediaProjectionManager;
 
@@ -31,7 +31,7 @@ public class ScreenRecordUtil {
     }
 
 
-    public static void init(int width,int height,int screenRecordBitrate){
+    public void init(int width,int height,int screenRecordBitrate){
         mRecordWidth=width;
         mRecordheight=height;
         mScreenRecordBitrate=screenRecordBitrate;
@@ -44,7 +44,7 @@ public class ScreenRecordUtil {
     }
 
     public void start(Activity activity, String savePath) {
-        ScreenRecordUtil.savePath = savePath;
+        this.savePath = savePath;
         WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics metrics = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(metrics);
@@ -56,7 +56,7 @@ public class ScreenRecordUtil {
 
 
     //返回可以开始录屏的数据
-    static void permissionResult(int resultCode, Intent data) {
+    public void permissionResult(int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null) {
             MediaProjection mMediaProjection = mMediaProjectionManager.getMediaProjection(resultCode, data);
             mRecorder = new ScreenRecorder(mRecordWidth, mRecordheight, mScreenRecordBitrate, mScreenDensity, mMediaProjection, savePath);
@@ -77,27 +77,35 @@ public class ScreenRecordUtil {
         }
     }
 
-    public static int getmRecordWidth() {
+    public int getmScreenDensity() {
+        return mScreenDensity;
+    }
+
+    public void setmScreenDensity(int mScreenDensity) {
+        this.mScreenDensity = mScreenDensity;
+    }
+
+    public int getmRecordWidth() {
         return mRecordWidth;
     }
 
-    public static void setmRecordWidth(int mRecordWidth) {
-        ScreenRecordUtil.mRecordWidth = mRecordWidth;
+    public void setmRecordWidth(int mRecordWidth) {
+        this.mRecordWidth = mRecordWidth;
     }
 
-    public static int getmRecordheight() {
+    public int getmRecordheight() {
         return mRecordheight;
     }
 
-    public static void setmRecordheight(int mRecordheight) {
-        ScreenRecordUtil.mRecordheight = mRecordheight;
+    public void setmRecordheight(int mRecordheight) {
+        this.mRecordheight = mRecordheight;
     }
 
-    public static int getmScreenRecordBitrate() {
+    public int getmScreenRecordBitrate() {
         return mScreenRecordBitrate;
     }
 
-    public static void setmScreenRecordBitrate(int mScreenRecordBitrate) {
-        ScreenRecordUtil.mScreenRecordBitrate = mScreenRecordBitrate;
+    public void setmScreenRecordBitrate(int mScreenRecordBitrate) {
+        this.mScreenRecordBitrate = mScreenRecordBitrate;
     }
 }

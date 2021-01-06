@@ -38,9 +38,9 @@ public class ScreenShotUtil {
     static int mScreenHeight;
     WindowManager mWindowManager;
 
-    public static boolean isInit;
+    public volatile boolean isInit;
 
-    OnScreenShotListener onScreenShotListener;
+    private OnScreenShotListener onScreenShotListener;
 
     private ScreenShotUtil() {
     }
@@ -56,21 +56,33 @@ public class ScreenShotUtil {
      * @param listener
      */
     public void screenShot(Activity activity, OnScreenShotListener listener) {
-        onScreenShotListener = listener;
-        init(activity);
-        ScreenRecordActivity.isScrennShot=true;
-        activity.startActivity(new Intent(activity, ScreenRecordActivity.class));
+        if (!isInit) {
+            onScreenShotListener = listener;
+            init(activity);
+            ScreenRecordActivity.isScrennShot = true;
+            activity.startActivity(new Intent(activity, ScreenRecordActivity.class));
+        } else {
+            listener.screenShot(true);
+        }
     }
 
-    //获取截屏
+    /**
+     * 获取截屏
+     *
+     * @return
+     */
     public Bitmap getScreenShot() {
-        if (isInit)
+        if (isInit) {
             return startCapture();
-        else
+        } else {
             return null;
+        }
+
     }
 
-    //停止录屏
+    /**
+     * 停止录屏
+     */
     public void destroy() {
         onScreenShotListener = null;
         if (mVirtualDisplay == null) {
@@ -108,47 +120,47 @@ public class ScreenShotUtil {
         DisplayMetrics metrics = new DisplayMetrics();
         mWindowManager.getDefaultDisplay().getMetrics(metrics);
         mScreenDensity = metrics.densityDpi;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!isInit) {
-                    SystemClock.sleep(10);
-                }
-                if (activity != null) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (onScreenShotListener != null)
-                                onScreenShotListener.screenShot();
-                        }
-                    });
-                }
-            }
-        }).start();
-
     }
 
-    //返回可以开始录屏的数据
-    static void permissionResult(int resultCode, Intent data) {
+    /**
+     * 返回可以开始录屏的数据
+     *
+     * @param resultCode
+     * @param data
+     */
+    public void permissionResult(int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mMediaProjection = mMediaProjectionManager.getMediaProjection(resultCode, data);
             }
             virtualDisplay();
+        }else {
+            isInit = false;
+            onScreenShotListener.screenShot(false);
         }
     }
 
-    //开始录屏
-    static void virtualDisplay() {
+    /**
+     * 开始录屏
+     */
+    private void virtualDisplay() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mVirtualDisplay = mMediaProjection.createVirtualDisplay("screen-mirror",
                     mScreenWidth, mScreenHeight, mScreenDensity, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                     mImageReader.getSurface(), null, null);
+            isInit = true;
+            onScreenShotListener.screenShot(true);
+        } else {
+            isInit = false;
+            onScreenShotListener.screenShot(false);
         }
 
     }
 
-    //获取截图
+    /**
+     * 获取截图
+     * @return
+     */
     private Bitmap startCapture() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             Image image = null;

@@ -34,9 +34,9 @@ public class ScreenRecordActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
             if (isScrennShot) {
-                ScreenShotUtil.permissionResult(resultCode, data);
+                ScreenShotUtil.getInstance().permissionResult(resultCode, data);
             } else {
-                ScreenRecordUtil.permissionResult(resultCode, data);
+                ScreenRecordUtil.getInstance().permissionResult(resultCode, data);
             }
             finish();
         }
@@ -59,7 +59,6 @@ public class ScreenRecordActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ScreenShotUtil.isInit = true;
         Log.e("ScreenRecordActivity：", "onDestroy");
     }
 }
